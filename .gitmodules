@@ -1,0 +1,3 @@
+[submodule "eid-oidc-provider"]
+	path = eid-oidc-provider
+	url = https://github.com/jetcar/eid-oidc-provider.git
