@@ -7,3 +7,6 @@
 [submodule "oidc-test"]
 	path = oidc-test
 	url = https://github.com/jetcar/oidc-test.git
+[submodule "eid-auth-ui"]
+	path = eid-auth-ui
+	url = https://github.com/jetcar/eid-auth-ui.git
