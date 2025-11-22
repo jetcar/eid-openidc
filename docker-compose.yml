@@ -28,12 +28,12 @@ services:
       - SSL_ENABLED=true
       - OIDC_ISSUER=https://localhost
       - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_BOOT_AUTOCONFIGURE=DEBUG
-      - SMARTID_HOST_URL=https://smartid-mock:8083
+      - SMARTID_HOST_URL=https://eid-mock:8083
 
     depends_on:
       redis:
         condition: service_healthy
-      smartid-mock:
+      eid-mock:
         condition: service_started
   oidc-test:
     build:
@@ -55,25 +55,25 @@ services:
       - OIDC_TOKEN_URI=https://localhost/eid-oidc-provider/token
       - OIDC_USERINFO_URI=https://localhost/eid-oidc-provider/userinfo
       - OIDC_JWKS_URI=https://localhost/eid-oidc-provider/.well-known/jwks.json
-  smartid-mock:
+  eid-mock:
     build:
-      context: ./smartid-mock
-    container_name: smartid-mock
+      context: ./eid-mock
+    container_name: eid-mock
     ports:
       - "8083:8083"
       - "5007:5007"
     volumes:
-      - ./smartid-mock/src/main/resources:/app/resources
-      - maven-cache-smartid:/root/.m2
-      - ./smartid-mock/config:/app/config:ro
+      - ./eid-mock/src/main/resources:/app/resources
+      - maven-cache-eid-mock:/root/.m2
+      - ./eid-mock/config:/app/config:ro
     environment:
       - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5007
       - CONFIG_PATH=/app/config
       - SERVER_PORT=8083
       - SSL_ENABLED=true
+      - REDIS_HOST=redis
       - CA_KEYSTORE_PATH=/app/config/smartid_mock.p12
       - CA_KEYSTORE_ALIAS=smartid-mock-ca
-      - CA_KEYSTORE_PATH=/app/config/keystore.p12
       - CA_KEYSTORE_ALIAS=springboot
 
   redis:
@@ -90,6 +90,6 @@ services:
 volumes:
   maven-cache-eid-oidc-provider:
   maven-cache-oidc:
-  maven-cache-smartid:
+  maven-cache-eid-mock:
 
 
