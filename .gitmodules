@@ -1,3 +1,6 @@
 [submodule "eid-oidc-provider"]
 	path = eid-oidc-provider
 	url = https://github.com/jetcar/eid-oidc-provider.git
+[submodule "eid-mock"]
+	path = eid-mock
+	url = https://github.com/jetcar/eid-mock.git
