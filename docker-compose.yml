@@ -1,0 +1,95 @@
+version: '3.8'
+services:
+  haproxy:
+    image: haproxy:latest
+    container_name: haproxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+      - ./haproxy-certs:/etc/haproxy/certs:ro
+  eid-oidc-provider:
+    build:
+      context: ./eid-oidc-provider
+    container_name: eid-oidc-provider
+    ports:
+      - "8443:8443"
+      - "5005:5005"
+    volumes:
+      - ./eid-oidc-provider/src/main/resources:/app/resources
+      - ./eid-oidc-provider/config:/app/config:ro
+      - maven-cache-eid-oidc-provider:/root/.m2
+    environment:
+      - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      - REDIS_HOST=redis
+      - CONFIG_PATH=/app/config
+      - SERVER_PORT=8443
+      - SSL_ENABLED=true
+      - OIDC_ISSUER=https://localhost
+      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_BOOT_AUTOCONFIGURE=DEBUG
+      - SMARTID_HOST_URL=https://smartid-mock:8083
+
+    depends_on:
+      redis:
+        condition: service_healthy
+      smartid-mock:
+        condition: service_started
+  oidc-test:
+    build:
+      context: ./oidc-test
+    container_name: oidc-test
+    ports:
+      - "8082:8082"
+      - "5006:5006"
+    volumes:
+      - ./oidc-test/src/main/resources:/app/resources
+      - maven-cache-oidc:/root/.m2
+      - ./oidc-test/config:/app/config:ro
+    environment:
+      - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006
+      - CONFIG_PATH=/app/config
+      - SERVER_PORT=8082
+      - SSL_ENABLED=true
+      - OIDC_AUTHORIZATION_URI=https://localhost/eid-oidc-provider/authorize
+      - OIDC_TOKEN_URI=https://localhost/eid-oidc-provider/token
+      - OIDC_USERINFO_URI=https://localhost/eid-oidc-provider/userinfo
+      - OIDC_JWKS_URI=https://localhost/eid-oidc-provider/.well-known/jwks.json
+  smartid-mock:
+    build:
+      context: ./smartid-mock
+    container_name: smartid-mock
+    ports:
+      - "8083:8083"
+      - "5007:5007"
+    volumes:
+      - ./smartid-mock/src/main/resources:/app/resources
+      - maven-cache-smartid:/root/.m2
+      - ./smartid-mock/config:/app/config:ro
+    environment:
+      - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5007
+      - CONFIG_PATH=/app/config
+      - SERVER_PORT=8083
+      - SSL_ENABLED=true
+      - CA_KEYSTORE_PATH=/app/config/smartid_mock.p12
+      - CA_KEYSTORE_ALIAS=smartid-mock-ca
+      - CA_KEYSTORE_PATH=/app/config/keystore.p12
+      - CA_KEYSTORE_ALIAS=springboot
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  maven-cache-eid-oidc-provider:
+  maven-cache-oidc:
+  maven-cache-smartid:
+
+
