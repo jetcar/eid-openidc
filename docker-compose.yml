@@ -63,10 +63,10 @@ services:
       - SSL_ENABLED=true
       - SSL_KEYSTORE_PATH=/app/config/keystore.p12
       - KEY_STORE_PASSWORD=changeit
-      - OIDC_AUTHORIZATION_URI=https://eid-oidc-provider/eid-oidc-provider/authorize
-      - OIDC_TOKEN_URI=https://eid-oidc-provider/eid-oidc-provider/token
-      - OIDC_USERINFO_URI=https://eid-oidc-provider/eid-oidc-provider/userinfo
-      - OIDC_JWKS_URI=https://eid-oidc-provider/eid-oidc-provider/.well-known/jwks.json
+      - OIDC_AUTHORIZATION_URI=https://localhost/eid-oidc-provider/authorize
+      - OIDC_TOKEN_URI=https://eid-oidc-provider:8443/token
+      - OIDC_USERINFO_URI=https://eid-oidc-provider:8443/userinfo
+      - OIDC_JWKS_URI=https://eid-oidc-provider:8443/.well-known/jwks.json
   eid-mock:
     build:
       context: ./eid-mock
