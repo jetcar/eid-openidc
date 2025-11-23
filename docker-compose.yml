@@ -19,17 +19,28 @@ services:
     volumes:
       - ./eid-oidc-provider/src/main/resources:/app/resources
       - ./eid-oidc-provider/config:/app/config:ro
-      - maven-cache-eid-oidc-provider:/root/.m2
     environment:
       - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - REDIS_HOST=redis
       - CONFIG_PATH=/app/config
       - SERVER_PORT=8443
       - SSL_ENABLED=true
-      - OIDC_ISSUER=https://localhost
+      - OIDC_CLIENTS_CONFIG=/app/config/oidc-clients.json
+      - SSL_KEYSTORE_PATH=/app/config/keystore.p12
+      - KEY_STORE_PASSWORD=changeit
+      - OIDC_ISSUER=https://eid-oidc-provider
       - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_BOOT_AUTOCONFIGURE=DEBUG
       - SMARTID_HOST_URL=https://eid-mock:8083
-
+      - MID_TRUST_STORE_PATH=/app/config/smartid_mock_docker.p12
+      - MID_TRUST_STORE_PASSWORD=changeit
+      - MID_API_TRUST_STORE_PATH=/app/config/smartid_mock_docker.p12
+      - MID_API_TRUST_STORE_PASSWORD=changeit
+      - SMARTID_TRUST_STORE_PATH=/app/config/smartid_mock_docker.p12
+      - SMARTID_TRUST_STORE_PASSWORD=changeit
+      - SMARTID_API_TRUST_STORE_PATH=/app/config/smartid_mock_docker.p12
+      - SMARTID_API_TRUST_STORE_PASSWORD=changeit
+      - WEBEID_CA_KEYSTORE_PATH=/app/config/smartid_mock_docker.p12
+      - WEBEID_CA_KEYSTORE_PASSWORD=changeit
     depends_on:
       redis:
         condition: service_healthy
@@ -44,17 +55,18 @@ services:
       - "5006:5006"
     volumes:
       - ./oidc-test/src/main/resources:/app/resources
-      - maven-cache-oidc:/root/.m2
       - ./oidc-test/config:/app/config:ro
     environment:
       - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006
       - CONFIG_PATH=/app/config
       - SERVER_PORT=8082
       - SSL_ENABLED=true
-      - OIDC_AUTHORIZATION_URI=https://localhost/eid-oidc-provider/authorize
-      - OIDC_TOKEN_URI=https://localhost/eid-oidc-provider/token
-      - OIDC_USERINFO_URI=https://localhost/eid-oidc-provider/userinfo
-      - OIDC_JWKS_URI=https://localhost/eid-oidc-provider/.well-known/jwks.json
+      - SSL_KEYSTORE_PATH=/app/config/keystore.p12
+      - KEY_STORE_PASSWORD=changeit
+      - OIDC_AUTHORIZATION_URI=https://eid-oidc-provider/eid-oidc-provider/authorize
+      - OIDC_TOKEN_URI=https://eid-oidc-provider/eid-oidc-provider/token
+      - OIDC_USERINFO_URI=https://eid-oidc-provider/eid-oidc-provider/userinfo
+      - OIDC_JWKS_URI=https://eid-oidc-provider/eid-oidc-provider/.well-known/jwks.json
   eid-mock:
     build:
       context: ./eid-mock
@@ -63,18 +75,21 @@ services:
       - "8083:8083"
       - "5007:5007"
     volumes:
-      - ./eid-mock/src/main/resources:/app/resources
-      - maven-cache-eid-mock:/root/.m2
       - ./eid-mock/config:/app/config:ro
     environment:
       - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5007
       - CONFIG_PATH=/app/config
       - SERVER_PORT=8083
       - SSL_ENABLED=true
+      - SSL_KEYSTORE_PATH=/app/config/keystore_docker.p12
+      - KEY_STORE_PASSWORD=changeit
       - REDIS_HOST=redis
       - CA_KEYSTORE_PATH=/app/config/smartid_mock.p12
+      - CA_KEYSTORE_PASSWORD=changeit
       - CA_KEYSTORE_ALIAS=smartid-mock-ca
-      - CA_KEYSTORE_ALIAS=springboot
+    depends_on:
+      redis:
+        condition: service_healthy
 
   redis:
     image: redis:latest
