@@ -29,6 +29,8 @@ jobs:
     
     - name: Build frontend
       working-directory: ./eid-auth-ui
+      env:
+        CI: false
       run: |
         npm install
         npm run build --skip-postbuild || npm run build
