@@ -192,7 +192,7 @@ Each component is maintained in its own repository. See individual repositories 
 
 ## License
 
-[Add your license information here]
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Resources
 
