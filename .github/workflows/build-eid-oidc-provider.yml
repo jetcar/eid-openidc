@@ -30,7 +30,6 @@ jobs:
     - name: Build frontend
       working-directory: ./eid-auth-ui
       run: |
-        npm ci
         npm install
         npm run build --skip-postbuild || npm run build
     
