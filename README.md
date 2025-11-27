@@ -1,8 +1,27 @@
-# Estonian eID OpenID Connect Authentication System
+# Estonian eID OpenID Connect (OIDC) Provider - Mobile-ID, Smart-ID, ID-Card Authentication
 
-This is a monorepo implementing an OpenID Connect (OIDC) authentication system supporting Estonian electronic identification methods: ID-Card, Mobile-ID, and Smart-ID.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Java](https://img.shields.io/badge/Java-21-blue.svg)](https://openjdk.java.net/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2-green.svg)](https://spring.io/projects/spring-boot)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
 
-## Architecture
+Open-source OpenID Connect authentication system for Estonian electronic identification (eID). Supports **Mobile-ID**, **Smart-ID**, and **ID-Card** authentication methods with OAuth2/OIDC standard compliance.
+
+**Keywords:** Estonian eID, Mobile-ID integration, Smart-ID authentication, ID-Card login, OIDC provider, OAuth2 server, Spring Boot authentication, Estonian digital identity, e-government authentication
+
+## ✨ Features
+
+- ✅ **Mobile-ID Authentication** - SMS-based two-factor authentication for Estonian, Latvian, and Lithuanian users
+- ✅ **Smart-ID Authentication** - App-based authentication with biometrics support
+- ✅ **ID-Card Authentication** - PKI-based authentication using Estonian ID-Card with Web eID
+- ✅ **OAuth2/OIDC Compliant** - Standard-compliant authorization server with JWT tokens
+- ✅ **Spring Boot 3** - Modern Java framework with Spring Security integration
+- ✅ **Redis Session Storage** - Scalable session management
+- ✅ **Docker Ready** - Complete Docker Compose setup for easy deployment
+- ✅ **Mock Services** - Development-friendly mock APIs for testing without real eID services
+- ✅ **React UI** - Modern, responsive authentication interface
+
+## 🏗️ Architecture
 
 The system consists of multiple components linked as Git submodules:
 
