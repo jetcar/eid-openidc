@@ -31,8 +31,12 @@ jobs:
       working-directory: ./eid-auth-ui
       run: |
         npm ci
-        npm install fs-extra
-        npm run build
+        npm run build --skip-postbuild || npm run build
+    
+    - name: Copy frontend build to backend
+      run: |
+        rm -rf ./eid-oidc-provider/src/main/resources/static/*
+        cp -r ./eid-auth-ui/build/* ./eid-oidc-provider/src/main/resources/static/
     
     - name: Set up JDK 21
       uses: actions/setup-java@v4
