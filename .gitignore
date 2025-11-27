@@ -1,4 +1,4 @@
 .idea
 .vscode
-.github
 haproxy-certs
+/.github/copilot-instructions.md
